@@ -1,5 +1,5 @@
 DEBUG?=0
-VENV_NAME?=.venv
+VENV_NAME?=venv
 PYTHON=${VENV_NAME}/bin/python
 PORT?=8000
 
@@ -16,8 +16,8 @@ $(VENV_NAME)/bin/activate: requirements.txt
 .PHONY: prepare_venv
 prepare_venv: $(VENV_NAME)/bin/activate
 
-PHONY: run
-runserver: prepare_venv
+PHONY: runserver
+run: prepare_venv
 	${PYTHON} manage.py runserver 0.0.0.0:${PORT}
 
 PHONY: migrate
