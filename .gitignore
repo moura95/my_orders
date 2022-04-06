@@ -1,0 +1,8 @@
+core/__pycache__/
+# created by virtualenv automatically
+venv
+*__pycache__
+migrations
+db.sqlite3
+.idea
+.pytest_cache
