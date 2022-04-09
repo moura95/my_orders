@@ -8,3 +8,4 @@ requests==2.27.1
 sqlparse==0.4.2
 Markdown==3.3.6
 django-filter==21.1
+Pillow==9.1.0
