@@ -9,3 +9,4 @@ sqlparse==0.4.2
 Markdown==3.3.6
 django-filter==21.1
 Pillow==9.1.0
+mysqlclient==2.1.0
