@@ -19,12 +19,20 @@ from django.views.generic import TemplateView
 from rest_framework.schemas import get_schema_view
 from rest_framework import routers
 
-from core.views import SellerViewSet, CompanyViewSet
+from core.views import SellerViewSet, CompanyViewSet, PortageViewSet, CustomerViewSet, FactoryViewSet, EmployerViewSet, ProductViewSet, Factory_ProductViewSet, OrderViewSet, OrderItemsViewSet
 
 router = routers.DefaultRouter()
 
 router.register(r"api/seller", SellerViewSet, basename="seller")
 router.register(r"api/company", CompanyViewSet, basename="company")
+router.register(r"api/portage", PortageViewSet, basename="portage")
+router.register(r"api/customer", CustomerViewSet, basename="customer")
+router.register(r"api/factory", FactoryViewSet, basename="factory")
+router.register(r"api/employer", EmployerViewSet, basename="employer")
+router.register(r"api/product", ProductViewSet, basename="product")
+router.register(r"api/factory_product", Factory_ProductViewSet, basename="factory_product")
+router.register(r"api/order", OrderViewSet, basename="order")
+router.register(r"api/order_items", OrderItemsViewSet, basename="order_items")
 
 urlpatterns = [
     path('admin/', admin.site.urls),
