@@ -18,7 +18,7 @@ prepare_venv: $(VENV_NAME)/bin/activate
 
 PHONY: runserver
 run: prepare_venv
-	${PYTHON} manage.py runserver 0.0.0.0:${PORT}
+	${PYTHON} manage.py runserver 127.0.0.1:${PORT}
 
 PHONY: migrate
 migrate: prepare_venv
