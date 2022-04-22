@@ -31,8 +31,8 @@ class Portage(models.Model):
     company_id = models.ForeignKey(Company, null=True, on_delete=models.SET_NULL)
 
     class Meta:
-        verbose_name = "Factory_Product"
-        verbose_name_plural = "Factory_Products"
+        verbose_name = "Transportadora"
+        verbose_name_plural = "Transportadora"
 
 
 class Customer(models.Model):
@@ -51,7 +51,7 @@ class Employer(models.Model):
     customer_id = models.ForeignKey(Customer, null=True, on_delete=models.SET_NULL)
 
     def __str__(self):
-        return ' '.join([self.name, self.customer_id])
+        return ' '.join([self.name])
 
 
 class Product(models.Model):
