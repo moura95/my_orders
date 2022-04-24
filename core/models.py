@@ -36,11 +36,19 @@ class Portage(models.Model):
 
 
 class Customer(models.Model):
+    name = models.CharField(max_length=120, null=True, blank=True)
     company_id = models.ForeignKey(Company, null=True, on_delete=models.SET_NULL)
+
+    def __str__(self):
+        return f'{self.id}'
 
 
 class Factory(models.Model):
+    name = models.CharField(max_length=120, null=True, blank=True)
     company_id = models.ForeignKey(Company, null=True, on_delete=models.SET_NULL)
+
+    def __str__(self):
+        return f'{self.id}'
 
 
 class Employer(models.Model):
@@ -51,7 +59,7 @@ class Employer(models.Model):
     customer_id = models.ForeignKey(Customer, null=True, on_delete=models.SET_NULL)
 
     def __str__(self):
-        return ' '.join([self.name])
+        return f'{self.id}'
 
 
 class Product(models.Model):
@@ -76,9 +84,9 @@ class Factory_Product(models.Model):
 
 class Order(models.Model):
     shipping_enum = (
-                        (1, 'CIF'),
-                        (2, 'FOB'),
-                    )
+        (1, 'CIF'),
+        (2, 'FOB'),
+    )
     status_enum = (
         (1, 'Cotacao'),
         (2, 'Aprovado'),
@@ -93,6 +101,9 @@ class Order(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
+    def __str__(self):
+        return f'{self.id}'
+
 
 class OrderItems(models.Model):
     order_id = models.ForeignKey(Order, null=True, on_delete=models.SET_NULL)
@@ -100,3 +111,6 @@ class OrderItems(models.Model):
     quantity = models.IntegerField()
     price_with_discount = models.DecimalField(decimal_places=2, max_digits=6, blank=True, null=True)
     discount = models.DecimalField(decimal_places=2, max_digits=6, blank=True, null=True)
+
+    def __str__(self):
+        return f'{self.id}'
