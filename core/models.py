@@ -97,6 +97,7 @@ class Order(models.Model):
     seller_id = models.ForeignKey(Seller, null=True, on_delete=models.SET_NULL)
     portage_id = models.ForeignKey(Portage, null=True, blank=True, on_delete=models.SET_NULL)
     customer_id = models.ForeignKey(Customer, null=True, on_delete=models.SET_NULL)
+    employer_id = models.ForeignKey(Employer, null=True, blank=True, on_delete=models.SET_NULL)
     observation = models.CharField(max_length=255, blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
