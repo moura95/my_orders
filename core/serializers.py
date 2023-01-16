@@ -1,7 +1,14 @@
+from django.contrib.auth.models import User
 from rest_framework import serializers
 
-from core.models import Seller, Company, Portage, Customer, Factory, Employer, Product, Factory_Product, Order, \
-    OrderItems, Plan
+from core.models import Seller, Company, Catalog, Product, Order, \
+    OrderItem, Plan
+
+
+class UserSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ('id', 'username', 'email', 'first_name', 'last_name', 'is_active')
 
 
 class SellerSerializer(serializers.ModelSerializer):
@@ -16,27 +23,9 @@ class CompanySerializer(serializers.ModelSerializer):
         fields = "__all__"
 
 
-class PortageSerializer(serializers.ModelSerializer):
+class CatalogSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Portage
-        fields = "__all__"
-
-
-class CustomerSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Customer
-        fields = "__all__"
-
-
-class FactorySerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Factory
-        fields = "__all__"
-
-
-class EmployerSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Employer
+        model = Catalog
         fields = "__all__"
 
 
@@ -45,11 +34,6 @@ class ProductSerializer(serializers.ModelSerializer):
         model = Product
         fields = "__all__"
 
-
-class Factory_ProductSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Factory_Product
-        fields = "__all__"
 
 
 class OrderSerializer(serializers.ModelSerializer):
@@ -60,7 +44,7 @@ class OrderSerializer(serializers.ModelSerializer):
 
 class OrderItemsSerializer(serializers.ModelSerializer):
     class Meta:
-        model = OrderItems
+        model = OrderItem
         fields = "__all__"
 
 

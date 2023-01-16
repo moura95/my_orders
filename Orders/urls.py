@@ -20,23 +20,18 @@ from rest_framework.schemas import get_schema_view
 from rest_framework import routers
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 
-from core.views import SellerViewSet, CompanyViewSet, PortageViewSet, CustomerViewSet, FactoryViewSet, EmployerViewSet, \
-    ProductViewSet, Factory_ProductViewSet, OrderViewSet, OrderItemsViewSet, PlanViewSet
+from core.views import SellerViewSet, CompanyViewSet, ProductViewSet, OrderViewSet, OrderItemsViewSet, PlanViewSet, \
+    UserViewSet
 
 router = routers.DefaultRouter()
 
 router.register(r"api/seller", SellerViewSet, basename="seller")
+router.register(r'api/user-detail', UserViewSet, basename='user-detail')
 router.register(r"api/plan", PlanViewSet, basename="plan")
 router.register(r"api/company", CompanyViewSet, basename="company")
-router.register(r"api/portage", PortageViewSet, basename="portage")
-router.register(r"api/customer", CustomerViewSet, basename="customer")
-router.register(r"api/factory", FactoryViewSet, basename="factory")
-router.register(r"api/employer", EmployerViewSet, basename="employer")
 router.register(r"api/product", ProductViewSet, basename="product")
-router.register(r"api/factory_product", Factory_ProductViewSet, basename="factory_product")
 router.register(r"api/order", OrderViewSet, basename="order")
 router.register(r"api/order_items", OrderItemsViewSet, basename="order_items")
-
 
 urlpatterns = [
     path('api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
