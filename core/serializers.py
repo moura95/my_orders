@@ -1,6 +1,7 @@
 from rest_framework import serializers
 
-from core.models import Seller, Company, Portage, Customer, Factory, Employer, Product, Factory_Product, Order, OrderItems
+from core.models import Seller, Company, Portage, Customer, Factory, Employer, Product, Factory_Product, Order, \
+    OrderItems, Plan
 
 
 class SellerSerializer(serializers.ModelSerializer):
@@ -60,4 +61,10 @@ class OrderSerializer(serializers.ModelSerializer):
 class OrderItemsSerializer(serializers.ModelSerializer):
     class Meta:
         model = OrderItems
+        fields = "__all__"
+
+
+class PlanSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Plan
         fields = "__all__"

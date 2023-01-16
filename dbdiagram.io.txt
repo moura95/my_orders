@@ -1,0 +1,114 @@
+https://dbdiagram.io/d/62e961b9f31da965e8660694
+Table users as U {
+  id int [pk, increment] // auto-increment
+  full_name varchar
+  created_at timestamp
+  login varchar
+  password varchar
+  active boolean
+}
+
+Table Seller {
+  user_id int [pk]
+  name varchar
+  tax_id varchar
+ }
+
+Table Company as C {
+  id int [pk, increment]
+  user_id int
+  name varchar
+  cnpj varchar
+  fantasy_name varchar
+  ie varchar
+  fone varchar
+  fone2 varchar
+  logo varchar
+  type_company Company.type_company
+  address_id int
+ }
+
+Enum Company.type_company{
+  Portage
+  Customer
+  Factory
+}
+
+
+Table Address {
+   id int [pk, increment]
+   street varchar
+   number varchar
+   zip_code varchar
+   city varchar
+   state varchar
+   district varchar
+   apelido varchar
+
+ }
+
+Ref: U.id > Seller.user_id
+Ref: C.address_id > Address.id
+//----------------------------------------------//
+
+
+Table products as P {
+  id int [pk]
+  name varchar
+  description varchar
+  cod varchar
+  price decimal
+  ipi float
+  active boolean
+  company_id int
+  created_at datetime
+  updated_at datetime
+
+}
+
+Table order as order {
+  id int [pk]
+  status status_type
+  shipping shipping_status
+  user_id int
+  portage_id int
+  customer_id int
+  employer varchar
+  observation varchar
+  created_at datetime
+  updated_at datetime
+}
+
+Enum shipping_status {
+  Cif
+  Fob
+}
+
+Enum status_type {
+  Cotacao
+  Aprovado
+  Cancelado
+  }
+
+Table order_items as order_items{
+  order_id int
+  product_id int
+  quantity int
+  price_with_discount decimal
+  discount float
+
+}
+
+
+Ref: P.company_id > C.id
+
+Ref: Company.user_id > U.id
+
+Ref: order.user_id > U.id
+
+Ref: order_items.order_id > order.id
+
+Ref: order_items.product_id > P.id
+
+
+Ref: "public"."Company"."user_id" < "public"."Company"."name"

@@ -18,12 +18,15 @@ from django.urls import path, include
 from django.views.generic import TemplateView
 from rest_framework.schemas import get_schema_view
 from rest_framework import routers
+from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 
-from core.views import SellerViewSet, CompanyViewSet, PortageViewSet, CustomerViewSet, FactoryViewSet, EmployerViewSet, ProductViewSet, Factory_ProductViewSet, OrderViewSet, OrderItemsViewSet
+from core.views import SellerViewSet, CompanyViewSet, PortageViewSet, CustomerViewSet, FactoryViewSet, EmployerViewSet, \
+    ProductViewSet, Factory_ProductViewSet, OrderViewSet, OrderItemsViewSet, PlanViewSet
 
 router = routers.DefaultRouter()
 
 router.register(r"api/seller", SellerViewSet, basename="seller")
+router.register(r"api/plan", PlanViewSet, basename="plan")
 router.register(r"api/company", CompanyViewSet, basename="company")
 router.register(r"api/portage", PortageViewSet, basename="portage")
 router.register(r"api/customer", CustomerViewSet, basename="customer")
@@ -34,7 +37,10 @@ router.register(r"api/factory_product", Factory_ProductViewSet, basename="factor
 router.register(r"api/order", OrderViewSet, basename="order")
 router.register(r"api/order_items", OrderItemsViewSet, basename="order_items")
 
+
 urlpatterns = [
+    path('api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
+    path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
     path('admin/', admin.site.urls),
     path('api-auth/', include('rest_framework.urls')),
     path("", include(router.urls)),
@@ -45,11 +51,11 @@ urlpatterns = [
     ), name='openapi-schema'),
     path('swagger-ui/', TemplateView.as_view(
         template_name='swagger-ui.html',
-        extra_context={'schema_url':'openapi-schema'}
+        extra_context={'schema_url': 'openapi-schema'}
     ), name='swagger-ui'),
     path('redoc/', TemplateView.as_view(
         template_name='redoc.html',
-        extra_context={'schema_url':'openapi-schema'}
+        extra_context={'schema_url': 'openapi-schema'}
     ), name='redoc'),
 
 ]
