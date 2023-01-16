@@ -8,7 +8,7 @@ from django.utils import timezone
 
 
 class Seller(models.Model):
-    user = models.ForeignKey(User, null=True, on_delete=models.SET_NULL)
+    user_id = models.ForeignKey(User, null=True, on_delete=models.SET_NULL)
     name = models.CharField(max_length=120)
     pix = models.CharField(max_length=120, null=True, blank=True)
     email = models.CharField(max_length=120, null=True, blank=True)
@@ -21,8 +21,8 @@ class Company(models.Model):
     company_enum = (
         (1, 'Customer'),
         (2, 'Factory'),
-        (2, 'Portage'),
-        (2, 'Company'),
+        (3, 'Portage'),
+        (4, 'Company'),
     )
     type = models.IntegerField(choices=company_enum, default=1)
     name = models.CharField(max_length=120)
@@ -51,7 +51,7 @@ class Company(models.Model):
         verbose_name_plural = 'Companies'
 
     def __str__(self):
-        return ' '.join([self.name, self.cnpj])
+        return ' '.join([self.name, self.cpfcnpj])
 
 
 
@@ -149,10 +149,12 @@ class OrderItem(models.Model):
 
 class Plan(models.Model):
     plan_enum = (
-        ("Intermediate", 'Intermediate'),
-        ("Advanced", 'Advanced'),
+        (1, 'Intermediate'),
+        (2, 'Advanced'),
     )
     plan = models.CharField(max_length=20, choices=plan_enum, default="Advanced")
-    user = models.OneToOneField(User, on_delete=models.CASCADE, unique=True)
+    user_id = models.OneToOneField(User, on_delete=models.CASCADE, unique=True)
     updated_at = models.DateTimeField(auto_now=True)
+    # date now + 30 days
+    data_expire = models.DateTimeField(default=timezone.now() + timedelta(days=30))
     # created_at = models.DateTimeField(auto_now_add=True)
