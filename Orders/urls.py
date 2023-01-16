@@ -26,7 +26,7 @@ from core.views import SellerViewSet, CompanyViewSet, ProductViewSet, OrderViewS
 router = routers.DefaultRouter()
 
 router.register(r"api/seller", SellerViewSet, basename="seller")
-router.register(r'api/user-detail', UserViewSet, basename='user-detail')
+router.register(r'api/user', UserViewSet, basename='user')
 router.register(r"api/plan", PlanViewSet, basename="plan")
 router.register(r"api/company", CompanyViewSet, basename="company")
 router.register(r"api/product", ProductViewSet, basename="product")
