@@ -22,7 +22,7 @@ class UserViewSet(ModelViewSet):
         if user_id:
             queryset = User.objects.filter(id=user_id)
         else:
-            queryset = User.objects.filter(user=request.user)
+            queryset = User.objects.filter(id=request.user)
 
         serializer = UserSerializer(queryset, many=True)
         return Response(serializer.data)
