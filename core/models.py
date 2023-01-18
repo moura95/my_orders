@@ -1,34 +1,49 @@
+from datetime import timedelta
+
 from django.contrib.auth.models import User
 
 # Create your models here.
 from django.db import models
-
-
-class Plan(models.Model):
-    plan_enum = (
-        ("Intermediate", 'Intermediate'),
-        ("Advanced", 'Advanced'),
-    )
-    plan = models.CharField(max_length=20, choices=plan_enum, default="Advanced")
-    user = models.OneToOneField(User, on_delete=models.CASCADE, unique=True)
-    updated_at = models.DateTimeField(auto_now=True)
-    # created_at = models.DateTimeField(auto_now_add=True)
+from django.utils import timezone
 
 
 class Seller(models.Model):
-    user = models.ForeignKey(User, null=True, on_delete=models.SET_NULL)
+    user_id = models.ForeignKey(User, null=True, on_delete=models.SET_NULL)
     name = models.CharField(max_length=120)
-    tax_id = models.CharField(max_length=30)
-
+    pix = models.CharField(max_length=120, null=True, blank=True)
+    email = models.CharField(max_length=120, null=True, blank=True)
+    phone = models.CharField(max_length=120, null=True, blank=True)
+    phone2 = models.CharField(max_length=120, null=True, blank=True)
+    cpfcnpj = models.CharField(max_length=30)
+    observation = models.TextField(null=True, blank=True)
 
 class Company(models.Model):
+    company_enum = (
+        (1, 'Customer'),
+        (2, 'Factory'),
+        (3, 'Portage'),
+        (4, 'Company'),
+    )
+    type = models.IntegerField(choices=company_enum, default=1)
     name = models.CharField(max_length=120)
-    cnpj = models.CharField(max_length=120)
+    email = models.CharField(max_length=120, null=True, blank=True)
+    website = models.CharField(max_length=120, null=True, blank=True)
+    logo_url = models.CharField(max_length=120, null=True, blank=True)
+    street = models.CharField(max_length=120, null=True, blank=True)
+    number = models.CharField(max_length=120, null=True, blank=True)
+    city = models.CharField(max_length=120, null=True, blank=True)
+    state = models.CharField(max_length=120, null=True, blank=True)
+    zip_code = models.CharField(max_length=120, null=True, blank=True)
+    is_active = models.BooleanField(default=True)
+    cpfcnpj = models.CharField(max_length=120)
     fantasy_name = models.CharField(max_length=120, null=True, blank=True)
     ie = models.CharField(max_length=120, null=True, blank=True)
-    fone = models.CharField(max_length=120, null=True, blank=True)
-    fone2 = models.CharField(max_length=120, null=True, blank=True)
+    phone = models.CharField(max_length=120, null=True, blank=True)
+    phone2 = models.CharField(max_length=120, null=True, blank=True)
     logo = models.ImageField(null=True, blank=True)
+    create_at = models.DateTimeField(auto_now_add=True)
+    update_at = models.DateTimeField(auto_now=True)
+    user_id = models.ForeignKey(User, null=True, on_delete=models.SET_NULL, related_name='user_id')
 
 
     class Meta:
@@ -36,66 +51,29 @@ class Company(models.Model):
         verbose_name_plural = 'Companies'
 
     def __str__(self):
-        return ' '.join([self.name, self.cnpj])
+        return ' '.join([self.name, self.cpfcnpj])
 
 
-class Portage(models.Model):
-    company_id = models.ForeignKey(Company, null=True, on_delete=models.SET_NULL)
+
+class Catalog(models.Model):
+    user_id = models.ForeignKey(User, null=True, on_delete=models.SET_NULL)
+    company = models.ForeignKey(Company, null=True, on_delete=models.SET_NULL)
+    name = models.CharField(max_length=120)
+    description = models.TextField(null=True, blank=True)
+    is_active = models.BooleanField(default=True)
+    create_at = models.DateTimeField(auto_now_add=True)
+    update_at = models.DateTimeField(auto_now=True)
 
     class Meta:
-        verbose_name = "Transportadora"
-        verbose_name_plural = "Transportadora"
-
-
-class Customer(models.Model):
-    name = models.CharField(max_length=120, null=True, blank=True)
-    company_id = models.ForeignKey(Company, null=True, on_delete=models.SET_NULL)
+        verbose_name = 'Catalog'
+        verbose_name_plural = 'Catalogs'
 
     def __str__(self):
-        return f'{self.id}'
+        return ' '.join([self.name, self.description])
 
 
-class Factory(models.Model):
-    name = models.CharField(max_length=120, null=True, blank=True)
-    company_id = models.ForeignKey(Company, null=True, on_delete=models.SET_NULL)
 
-    def __str__(self):
-        return f'{self.id}'
-
-
-class Employer(models.Model):
-    name = models.CharField(max_length=120, null=True, blank=True)
-    fone = models.CharField(max_length=120, null=True, blank=True)
-    email = models.CharField(max_length=120, null=True, blank=True)
-    active = models.BooleanField(default=True)
-    customer_id = models.ForeignKey(Customer, null=True, on_delete=models.SET_NULL)
-
-    def __str__(self):
-        return f'{self.id}'
-
-
-class Product(models.Model):
-    name = models.CharField(max_length=120)
-    description = models.CharField(max_length=120, blank=True, null=True)
-    cod = models.CharField(max_length=15, blank=True, null=True)
-    price = models.DecimalField(decimal_places=2, max_digits=8)
-    ipi = models.FloatField()
-    active = models.BooleanField(default=True)
-    factory_id = models.ForeignKey(Factory, null=True, on_delete=models.SET_NULL)
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
-
-
-    def __str__(self):
-        return f'{self.name}, {self.description}'
-
-
-class Factory_Product(models.Model):
-    product_id = models.ManyToManyField(Product)
-    factory_id = models.ManyToManyField(Factory)
-
-
-class Order(models.Model):
+class Order (models.Model):
     shipping_enum = (
         (1, 'CIF'),
         (2, 'FOB'),
@@ -105,26 +83,78 @@ class Order(models.Model):
         (2, 'Aprovado'),
         (3, 'Cancelado')
     )
-    status = models.IntegerField(choices=status_enum, default=1)
-    shipping = models.IntegerField(choices=shipping_enum, default=1)
+    user_id = models.ForeignKey(User, null=True, on_delete=models.SET_NULL)
+    factory = models.ForeignKey(Company, null=True, on_delete=models.SET_NULL,related_name='factory')
+    customer = models.ForeignKey(Company, null=True, on_delete=models.SET_NULL, related_name='customer')
+    portage = models.ForeignKey(Company, null=True, on_delete=models.SET_NULL, related_name='portage')
     seller_id = models.ForeignKey(Seller, null=True, on_delete=models.SET_NULL)
-    portage_id = models.ForeignKey(Portage, null=True, blank=True, on_delete=models.SET_NULL)
-    customer_id = models.ForeignKey(Customer, null=True, on_delete=models.SET_NULL)
-    employer_id = models.ForeignKey(Employer, null=True, blank=True, on_delete=models.SET_NULL)
-    observation = models.CharField(max_length=255, blank=True, null=True)
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
+    url_pdf = models.CharField(max_length=120)
+    buyer = models.CharField(max_length=120)
+    status=models.IntegerField(choices=status_enum, default=1)
+    shipping=models.IntegerField(choices=shipping_enum, default=1)
+    expire_order = models.DateTimeField(auto_now=timezone.now() + timedelta(days=10))
+    is_active = models.BooleanField(default=True)
+    create_at = models.DateTimeField(auto_now_add=True)
+    update_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        verbose_name = 'Order'
+        verbose_name_plural = 'Orders'
 
     def __str__(self):
-        return f'{self.id}'
+        return ' '.join([self.user_id, self.factory, self.customer, self.portage, self.status])
 
 
-class OrderItems(models.Model):
-    order_id = models.ForeignKey(Order, null=True, on_delete=models.SET_NULL)
-    product_id = models.ForeignKey(Product, null=True, on_delete=models.SET_NULL)
+class Product(models.Model):
+    user_id = models.ForeignKey(User, null=True, on_delete=models.SET_NULL)
+    factory = models.ForeignKey(Company, null=True, on_delete=models.SET_NULL)
+    catalog = models.ForeignKey(Catalog, null=True, on_delete=models.SET_NULL)
+    name = models.CharField(max_length=120)
+    code = models.CharField(max_length=120)
+    price = models.DecimalField(max_digits=10, decimal_places=2)
+    ipi = models.DecimalField(max_digits=10, decimal_places=2)
+    reference = models.CharField(max_length=120)
+    uni = models.CharField(max_length=120)
+    description = models.TextField(null=True, blank=True)
+    image_url = models.CharField(max_length=120)
+    is_active = models.BooleanField(default=True)
+    create_at = models.DateTimeField(auto_now_add=True)
+    update_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        verbose_name = 'Product'
+        verbose_name_plural = 'Products'
+
+    def __str__(self):
+        return ' '.join([self.name, self.code])
+
+
+
+class OrderItem(models.Model):
+    order = models.ForeignKey(Order, null=True, on_delete=models.SET_NULL)
+    product = models.ForeignKey(Product, null=True, on_delete=models.SET_NULL)
     quantity = models.IntegerField()
-    price_with_discount = models.DecimalField(decimal_places=2, max_digits=6, blank=True, null=True)
-    discount = models.DecimalField(decimal_places=2, max_digits=6, blank=True, null=True)
+    price = models.DecimalField(max_digits=10, decimal_places=2)
+    discount = models.DecimalField(max_digits=10, decimal_places=2)
+    is_active = models.BooleanField(default=True)
+    create_at = models.DateTimeField(auto_now_add=True)
+    update_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        verbose_name = 'OrderItem'
+        verbose_name_plural = 'OrderItems'
 
     def __str__(self):
-        return f'{self.id}'
+        return ' '.join([self.order, self.product])
+
+class Plan(models.Model):
+    plan_enum = (
+        (1, 'Intermediate'),
+        (2, 'Advanced'),
+    )
+    plan = models.CharField(max_length=20, choices=plan_enum, default="Advanced")
+    user_id = models.OneToOneField(User, on_delete=models.CASCADE, unique=True)
+    updated_at = models.DateTimeField(auto_now=True)
+    # date now + 30 days
+    data_expire = models.DateTimeField(default=timezone.now() + timedelta(days=30))
+    # created_at = models.DateTimeField(auto_now_add=True)
